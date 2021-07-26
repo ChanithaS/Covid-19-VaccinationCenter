@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class VaccinationCenter {
@@ -7,6 +9,10 @@ public class VaccinationCenter {
     static int emptyBooth = 0;
     private static int validatorNo;
     private static int noOfVaccines = 150;
+
+    private static LinkedList listAstraZeneca = new LinkedList();
+    private static LinkedList listSinopharm = new LinkedList();
+    private static LinkedList listPfizer = new LinkedList();
 
     /**
      * initialize booth and prints menu
@@ -70,7 +76,9 @@ public class VaccinationCenter {
      */
     public static void classMenuChoiceValidator(String userChoice)
     {
+//        checks for empty booths
         ClassEmptyBoothChecker();
+        //cases are activated according users choice
         switch (userChoice)
         {
             case "100": case "VVB":
@@ -149,6 +157,7 @@ public class VaccinationCenter {
      * prints booth values
      */
     private static void ClassViewBooth() {
+        //prints out patient names and empty booths in the booth array
         for(int i = 0; i < booth.length; i++)
         {
             if (booth[i].getFirstName().equals("."))
@@ -160,6 +169,27 @@ public class VaccinationCenter {
             {
                 System.out.println("|                     Booth "+i+" is occupied by                       |");
                 booth[i].printInfo();
+            }
+        }
+        //checks is any patient is in the waiting list and prints them
+        if (listAstraZeneca.size() > 0 || listSinopharm.size() > 0||listPfizer.size() > 0)
+        {
+            System.out.println("|------------------------------------------------------------------|");
+            System.out.println("|                     Patients in waiting list                     |");
+            for (int i = 0; i < listAstraZeneca.size(); i++)
+            {
+                Object[] waitingInfoGet = (Object[]) listAstraZeneca.get(i);
+                System.out.println(Arrays.toString(waitingInfoGet));
+            }
+            for (int i = 0; i < listSinopharm.size(); i++)
+            {
+                Object[] waitingInfoGet1 = (Object[]) listSinopharm.get(i);
+                System.out.println(Arrays.toString(waitingInfoGet1));
+            }
+            for (int i = 0; i < listPfizer.size(); i++)
+            {
+                Object[] waitingInfoGet2 = (Object[]) listPfizer.get(i);
+                System.out.println(Arrays.toString(waitingInfoGet2));
             }
         }
         System.out.println("|------------------------------------------------------------------|");
@@ -221,20 +251,50 @@ public class VaccinationCenter {
                 //Adds patient to AstraZeneca booth
                 else if(validatorNo == 1)
                 {
-                    //gives the respective booth numbers which AstraZeneca patients will add to getNo function
-                    getNo(0,1, "AstraZeneca");
+                    if(booth[0].getFirstName().equals(".") || booth[1].getFirstName().equals("."))
+                    {
+                        //gives the respective booth numbers which AstraZeneca patients will add to getNo function
+                        getNo(0,1, "AstraZeneca");
+                    }
+                    else
+                    {
+                        //if respective booths are full the patient will add into the waiting list
+                        //value 7 is passed into AddingInfo to activate the function
+                        System.out.println("|            Adding patient to AstraZeneca waiting list            |");
+                        AddingInfo(7);
+                    }
                 }
                 //Adds patient to Sinopharm booth
                 else if(validatorNo == 2)
                 {
-                    //gives the respective booth numbers which Sinopharm patients will add to getNo function
-                    getNo(2,3, "Sinopharm");
+                    if(booth[2].getFirstName().equals(".") || booth[3].getFirstName().equals("."))
+                    {
+                        //gives the respective booth numbers which Sinopharm patients will add to getNo function
+                        getNo(2,3, "Sinopharm");
+                    }
+                    else
+                    {
+                        //if respective booths are full the patient will add into the waiting list
+                        //value 8 is passed into AddingInfo to activate the function
+                        System.out.println("|             Adding patient to Sinopharm waiting list             |");
+                        AddingInfo(8);
+                    }
                 }
                 //Adds patient to Pfizer booth
                 else if(validatorNo == 3)
                 {
-                    //gives the respective booth numbers which Pfizer patients will add to getNo function
-                    getNo(4,5, "Pfizer");
+                    if(booth[4].getFirstName().equals(".") || booth[5].getFirstName().equals("."))
+                    {
+                        //gives the respective booth numbers which Pfizer patients will add to getNo function
+                        getNo(4,5, "Pfizer");
+                    }
+                    else
+                    {
+                        //if respective booths are full the patient will add into the waiting list
+                        //value 9 is passed into AddingInfo to activate the function
+                        System.out.println("|              Adding patient to Pfizer waiting list               |");
+                        AddingInfo(9);
+                    }
                 }
                 else {
                     System.out.println("|                         input not valid                          |");
@@ -256,6 +316,7 @@ public class VaccinationCenter {
         if(booth[first].getFirstName().equals("."))
         {
             AddingInfo(first);
+            //respective vaccination type is set
             booth[first].setVaccineType(vacType);
         }
         else if(booth[second].getFirstName().equals("."))
@@ -263,15 +324,10 @@ public class VaccinationCenter {
             AddingInfo(second);
             booth[second].setVaccineType(vacType);
         }
-        //if all booths are occupied, returning true
-        else {
-            System.out.println("|         Booths for AstraZeneca is occupied by a patients         |");
-            ClassAddPatient(true);
-        }
     }
 
     /**
-     * gets input and assign to array
+     * gets input and assign to array/linked list
      * @param boothNo
      */
     public static void AddingInfo(int boothNo)
@@ -282,26 +338,32 @@ public class VaccinationCenter {
         System.out.print("|                            : ");
         String customerFirstName = sc.next();                                                                           //getting an string of customers name and making its first character to a uppercase character
         customerFirstName = customerFirstName.substring(0,1).toUpperCase() + customerFirstName.substring(1);            // which will be use full is sorting names in alphabetical order as ASCII values are compared
-        booth[boothNo].setFirstName(customerFirstName);                                                                 //setting the customer name according to the number to names array
 
         //GETTING THE SURNAME OF CUSTOMER
         System.out.println("|                     Enter Your Surname :                         |");
         System.out.print("|                            : ");
         String customerSurname = sc.next();
         customerSurname = customerSurname.substring(0,1).toUpperCase() + customerSurname.substring(1);                  //getting an string of customers name and making its first character to a uppercase character
-        booth[boothNo].setSurName(customerSurname);                                                                     //setting the customer name according to the number to names array
+
+        //GETTING THE CITY OF CUSTOMER
+        System.out.println("|                     Enter Your City :                            |");
+        System.out.print("|                            : ");
+        String cityName = sc.next();
 
         //GETTING THE AGE OF CUSTOMER
+        int ageValue = 0;
         ClassIntValidator("|                     Enter Your age :                             |\n|                            : ");
         boolean validAge = false;
         while(!validAge)
         {
+            //getting a valid input from user so in between 100 to 18
             if (validatorNo < 100 && validatorNo > 18)
             {
-                booth[boothNo].setAge(validatorNo);
+                ageValue = validatorNo;
                 validAge = true;
             }
             else{
+                //checking if user is actually in range and if not letting the user exit the program
                 System.out.println("|Vaccines are only available for people between 18 - 100 years old |");
                 System.out.println("|     Enter Q/q if not in rage or C/c to enter a valid number      |");
                 String yesOrNo;
@@ -313,10 +375,8 @@ public class VaccinationCenter {
                     {
                         validAnswer = true;
                     }
-                    else if(yesOrNo.equals("Q") || yesOrNo.equals("q")){
-                        booth[boothNo].setFirstName(".");
-                        booth[boothNo].setSurName(".");
-                        booth[boothNo].setAge(0);
+                    else if(yesOrNo.equals("Q") || yesOrNo.equals("q"))
+                    {
                         ClassAddPatient(false);
                         validAnswer = true;
                         validAge = true;
@@ -328,16 +388,8 @@ public class VaccinationCenter {
                     }
                 }
                 ClassIntValidator("|                     Enter Your age :                             |\n|                            : ");
-
             }
         }
-
-        //GETTING THE CITY OF CUSTOMER
-        System.out.println("|                     Enter Your City :                            |");
-        System.out.print("|                            : ");
-        String cityName = sc.next();
-        //setting the customer name according to the number to names array
-        booth[boothNo].setCity(cityName);
 
         //GETTING THE NIC NUMBER OF CUSTOMER
         System.out.println("|                     Enter Your NIC/Passport number :             |");
@@ -347,9 +399,9 @@ public class VaccinationCenter {
         boolean validNic = false;
         while(!validNic)
         {
+            //validating if the card number entered is in between 9-10 letters
             if (nicOrPassport.length() == 9 || nicOrPassport.length() == 10)
             {
-                booth[boothNo].setNIC(nicOrPassport);
                 validNic = true;
             }
             else{
@@ -359,20 +411,47 @@ public class VaccinationCenter {
             }
         }
 
-        //decreasing 1 from total no of vaccines present
-        noOfVaccines -= 1;
-        System.out.println("|          Customer "+customerFirstName+ " "+ customerSurname+" was added to Booth No. "+boothNo);
-        ClassEmptyBoothChecker();
-        if (emptyBooth == 0)
+        //SETTING DETAILS OBTAINED TO BOOTH ARRAY OR TO WAITING LIST
+        //creating a new object array and assigning values from user input
+        Object[] waitingInfo = {customerFirstName, customerSurname, ageValue, cityName, nicOrPassport};
+        //function carried out according to the value passed
+        if(boothNo == 7)
         {
-            System.out.println("|                     All booths are occupied                      |");
-            ClassMenu();
-            ClassAddPatient(true);
+            //the object array is passed into the linked list of AstraZeneca
+            listAstraZeneca.add(waitingInfo);
+        }
+        else if(boothNo == 8)
+        {
+            //the object array is passed into the linked list of Sinopharm
+            listSinopharm.add(waitingInfo);
+        }
+        else if(boothNo == 9)
+        {
+            //the object array is passed into the linked list of Pfizer
+            listPfizer.add(waitingInfo);
+        }
+        else{
+            //values are set into the booth array if booth is free
+            booth[boothNo].setFirstName(customerFirstName);                                                                 //setting the customer name according to the number to names array
+            booth[boothNo].setSurName(customerSurname);                                                                     //setting the customer name according to the number to names array
+            booth[boothNo].setCity(cityName);                                                                               //setting the customer name according to the number to names array
+            booth[boothNo].setAge(ageValue);
+            booth[boothNo].setNIC(nicOrPassport);
+
+            //decreasing 1 from total no of vaccines present
+            noOfVaccines -= 1;
+            System.out.println("|          Customer "+customerFirstName+ " "+ customerSurname+" was added to Booth No. "+boothNo);
+            ClassEmptyBoothChecker();
+            if (emptyBooth == 0)
+            {
+                //telling user that booths are full and next patient will add to waiting list
+                System.out.println("|                     Initiating waiting list                      |");
+            }
         }
     }
 
     /**
-     * remove patient from booth number
+     * remove patient and ADD linked list patient
      */
     private static void ClassRemovePatient()
     {
@@ -386,6 +465,7 @@ public class VaccinationCenter {
 
             if (validatorNo == 6)
             {
+                //exiting the function
                 ClassMenu();
                 valid1 = true;
             }
@@ -398,7 +478,7 @@ public class VaccinationCenter {
                 }
                 else
                 {
-                    //replacing the customers name with the default . symbol which shows an empty booth
+                    //replacing the customers name and other values with the default symbols which shows an empty booth
                     System.out.println("|        Customer "+booth[validatorNo].getFirstName()+" "+ booth[validatorNo].getSurName() +" was deleted from Booth No. "+ validatorNo);
                     booth[validatorNo].setFirstName(".");
                     booth[validatorNo].setSurName(".");
@@ -406,6 +486,65 @@ public class VaccinationCenter {
                     booth[validatorNo].setCity(".");
                     booth[validatorNo].setNIC(".");
                     booth[validatorNo].setVaccineType(".");
+
+                    //if any patients are present in waiting list, the patient will get add up into the removed booth number
+                    //adding according to vaccine type
+                    if ((validatorNo == 0 || validatorNo == 1) && listAstraZeneca.size() != 0)
+                    {
+                        System.out.println("|        Assigning waiting list patient to booth "+ validatorNo);
+                        //assigning AstraZeneca waiting list first element patient into a Object array
+                        Object[] waitingInfoGet = (Object[]) listAstraZeneca.get(0);
+                        //the value from the Object array is taken and set into the respective place in the booth array
+                        booth[validatorNo].setFirstName((String) waitingInfoGet[0]);
+                        booth[validatorNo].setSurName((String) waitingInfoGet[1]);
+
+                        booth[validatorNo].setAge((Integer) waitingInfoGet[2]);
+                        booth[validatorNo].setCity((String) waitingInfoGet[3]);
+                        booth[validatorNo].setNIC((String) waitingInfoGet[4]);
+                        booth[validatorNo].setVaccineType("AstraZeneca");
+
+                        //then the taken object is removed from the linked list
+                        listAstraZeneca.removeFirst();
+                        //decreasing 1 from total no of vaccines present
+                        noOfVaccines -= 1;
+                    }
+                    else if ((validatorNo == 2 || validatorNo == 3) && listSinopharm.size() != 0)
+                    {
+                        System.out.println("|        Assigning waiting list patient to booth "+ validatorNo);
+                        //assigning Sinopharm waiting list first element patient into a Object array
+                        Object[] waitingInfoGet = (Object[]) listSinopharm.get(0);
+                        //the value from the Object array is taken and set into the respective place in the booth array
+                        booth[validatorNo].setFirstName((String) waitingInfoGet[0]);
+                        booth[validatorNo].setSurName((String) waitingInfoGet[1]);
+                        booth[validatorNo].setAge((int) waitingInfoGet[2]);
+                        booth[validatorNo].setCity((String) waitingInfoGet[3]);
+                        booth[validatorNo].setNIC((String) waitingInfoGet[4]);
+                        booth[validatorNo].setVaccineType("Sinopharm");
+
+                        //then the taken object is removed from the linked list
+                        listSinopharm.removeFirst();
+                        //decreasing 1 from total no of vaccines present
+                        noOfVaccines -= 1;
+                    }
+                    else if ((validatorNo == 4 || validatorNo == 5) && listPfizer.size() != 0)
+                    {
+                        System.out.println("|        Assigning waiting list patient to booth "+ validatorNo);
+                        //assigning Pfizer waiting list first element patient into a Object array
+                        Object[] waitingInfoGet = (Object[]) listPfizer.get(0);
+                        //the value from the Object array is taken and set into the respective place in the booth array
+                        booth[validatorNo].setFirstName((String) waitingInfoGet[0]);
+                        booth[validatorNo].setSurName((String) waitingInfoGet[1]);
+                        booth[validatorNo].setAge((int) waitingInfoGet[2]);
+                        booth[validatorNo].setCity((String) waitingInfoGet[3]);
+                        booth[validatorNo].setNIC((String) waitingInfoGet[4]);
+                        booth[validatorNo].setVaccineType("Pfizer");
+
+                        //then the taken object is removed from the linked list
+                        listPfizer.removeFirst();
+                        //decreasing 1 from total no of vaccines present
+                        noOfVaccines -= 1;
+                    }
+
                     ClassEmptyBoothChecker();
                     if (emptyBooth == 6)
                     {
@@ -428,11 +567,11 @@ public class VaccinationCenter {
     {
         System.out.println("|------------------------------------------------------------------|");                     //https://www.geeksforgeeks.org/java-program-to-sort-names-in-an-alphabetical-order/
         String temp;
-        for(int i = 0; i < booth.length; i++ ) {                                                                        //for every i index a loop of j values from 1 to 6 is run
-            for (int j = i + 1; j < booth.length; j++) {                                                                //the two values are compared by ASCII value each time therefore only if index i value is larger the functions will be called
-                if (booth[i].getFirstName().compareTo(booth[j].getFirstName()) > 0) {                                   //the value related to index i is stored in a temporary string
-                    temp = booth[i].getFirstName();                                                                     //the value related to index i is replaced with index j patient name
-                    booth[i].setFirstName(booth[j].getFirstName());                                                     //and j index value is replaced with temporary value
+        for(int i = 0; i < booth.length; i++ ) {
+            for (int j = i + 1; j < booth.length; j++) {
+                if (booth[i].getFirstName().compareTo(booth[j].getFirstName()) > 0) {
+                    temp = booth[i].getFirstName();
+                    booth[i].setFirstName(booth[j].getFirstName());
                     booth[j].setFirstName(temp);
                 }
             }
@@ -454,11 +593,13 @@ public class VaccinationCenter {
     private static void ClassSave()
     {
         try {
-            //creating a new data file and storing data into it as a object output stream
+            //creating a new data file and storing data into it
             ObjectOutputStream SaveFile = new ObjectOutputStream(new FileOutputStream("ClassData.txt"));    //referred from https://www.programiz.com/java-programming/objectoutputstream
-            SaveFile.writeInt(noOfVaccines);                                                                 //referred from https://stackoverflow.com/questions/27787067/storing-integers-and-arrays-in-a-file-and-reading-them
+            SaveFile.writeInt(noOfVaccines);                                                                     //referred from https://stackoverflow.com/questions/27787067/storing-integers-and-arrays-in-a-file-and-reading-them
             SaveFile.writeObject(booth);
-            //data is written to the file and closed
+            SaveFile.writeObject(listAstraZeneca);
+            SaveFile.writeObject(listPfizer);
+            SaveFile.writeObject(listSinopharm);
             SaveFile.close();
             System.out.println("|------------------------------------------------------------------|");
             System.out.println("|                          Data Saved                              |");
@@ -477,12 +618,13 @@ public class VaccinationCenter {
         System.out.println("|------------------------------------------------------------------|");
         try {
             System.out.println("|                      Loading saved data....                      |");
-            //loading data from the saved file as a new object output stream
+            //loading data from the saved file
             ObjectInputStream LoadFile = new ObjectInputStream(new FileInputStream("ClassData.txt"));
-            //values are loaded and stored in the variables
             noOfVaccines = LoadFile.readInt();
             booth = (Booth[]) LoadFile.readObject();
-            //closing the loaded file
+            listAstraZeneca = (LinkedList) LoadFile.readObject();
+            listSinopharm = (LinkedList) LoadFile.readObject();
+            listPfizer = (LinkedList) LoadFile.readObject();
             LoadFile.close();
             ClassMenu();
         } catch (IOException | ClassNotFoundException e) {

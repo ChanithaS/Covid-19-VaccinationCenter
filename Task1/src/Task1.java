@@ -9,11 +9,19 @@ public class Task1 {
     private static int boothNum;
     static int EmptyBooth = 0;
 
+    /**
+     * initialize booth and prints menu
+     * @param args
+     */
     public static void main(String[] args)
     {
         initialise();
         Menu();
     }
+
+    /**
+     * prints booth values
+     */
     public static void ViewBooth()
     {
         //printing out the string value in names array and if . present telling booth is empty
@@ -32,6 +40,10 @@ public class Task1 {
         System.out.println("|------------------------------------------------------------------|");
         MenuManager();
     }
+
+    /**
+     * prints empty booths
+     */
     public static void ViewEmptyBooth()
     {
         //if names array contain . printing out an empty booth is present
@@ -47,6 +59,9 @@ public class Task1 {
         MenuManager();
     }
 
+    /**
+     * adding patient to booth
+     */
     public static void AddPatient()
     {
         //first will check if there is vaccines, if not no more patients cant be added
@@ -79,7 +94,7 @@ public class Task1 {
                         System.out.println("|                Enter customer name for booth " + boothNum + " :                 |");
                         System.out.print("|                            : ");
                         //getting an string of customers name and making its first character to a uppercase character
-                        // which will be usefull is sorting names in alphabaticle order as ASCII values are compared
+                        // which will be useful is sorting names in alphabetical order as ASCII values are compared
                         String customerName = sc.next();
                         customerName = customerName.substring(0,1).toUpperCase() + customerName.substring(1);
                         //setting the customer name according to the number to names array
@@ -93,6 +108,7 @@ public class Task1 {
                         {
                             System.out.println("|                     All booths are occupied                      |");
                             Menu();
+                            //ending the while loop and returning to menu
                             valid = true;
                         }
                     }
@@ -100,6 +116,7 @@ public class Task1 {
                     {
                         System.out.println("|                   "+boothNum + " is occupied by a patient                    |");
                         AddPatient();
+                        //ending the while loop and returning to menu if not the loop will run throughout the program and give errors
                         valid = true;
                     }
                 }
@@ -109,6 +126,10 @@ public class Task1 {
             }
         }
     }
+
+    /**
+     * remove patient from booth number
+     */
     public static void RemovePatient()
     {
         System.out.println("|------------------------------------------------------------------|");
@@ -141,6 +162,7 @@ public class Task1 {
                     {
                         System.out.println("|                       All booths are Empty                       |");
                         Menu();
+                        //ending the while loop
                         valid1 = true;
                     }
                 }
@@ -150,15 +172,19 @@ public class Task1 {
             }
         }
     }
+
+    /**
+     * sort patients according to alphabetical order
+     */
     public static void PatientsSorted()
     {
         System.out.println("|------------------------------------------------------------------|");                     //https://www.geeksforgeeks.org/java-program-to-sort-names-in-an-alphabetical-order/
         String temp;
-        for(int i = 0; i < names.length; i++ ) {
-            for (int j = i + 1; j < names.length; j++) {
-                if (names[i].compareTo(names[j]) > 0) {
-                    temp = names[i];
-                    names[i] = names[j];
+        for(int i = 0; i < names.length; i++ ) {                                                                        //for every i index a loop of j values from 1 to 6 is run
+            for (int j = i + 1; j < names.length; j++) {                                                                //the two values are compared each time by ASCII value therefore only if index i value is larger the functions will be called
+                if (names[i].compareTo(names[j]) > 0) {                                                                 //the value related to index i is stored in a temporary string
+                    temp = names[i];                                                                                    //the value related to index i is replaced with index j patient name
+                    names[i] = names[j];                                                                                //and j index value is replaced with temporary value
                     names[j] = temp;
                 }
             }
@@ -173,6 +199,10 @@ public class Task1 {
         System.out.println("|------------------------------------------------------------------|");
         MenuManager();
     }
+
+    /**
+     * show remaining vaccine amount
+     */
     public static void RemainingVaccines()
     {
         //giving the no of vaccines present in different occasions
@@ -197,6 +227,10 @@ public class Task1 {
             MenuManager();
         }
     }
+
+    /**
+     * add vaccine
+     */
     public static void AddVaccines()
     {
         System.out.println("|------------------------------------------------------------------|");
@@ -226,28 +260,25 @@ public class Task1 {
                 {
                     System.out.println("|                      Can't add more than "+needToAdd +"                      |");
                 }
+                //while loop will stop after the addNo is greater than needToAdd number
             } while (addNo > needToAdd);
 
-
-            if(addNo > needToAdd)
-            {
-                System.out.println("|                      Can't add more than "+needToAdd +"                      |");
-                System.out.println("|------------------------------------------------------------------|");
-            }
-            else
-            {
-                noOfVaccines += addNo;
-                System.out.println("|                      Added "+ addNo+ " to the stock                       |");
-                System.out.println("|                     Total no of vaccines "+ noOfVaccines+"                     |");
-                Menu();
-            }
+            noOfVaccines += addNo;
+            System.out.println("|                      Added "+ addNo+ " to the stock                       |");
+            System.out.println("|                     Total no of vaccines "+ noOfVaccines+"                     |");
+            Menu();
         }
         System.out.println("|------------------------------------------------------------------|");
     }
+
+    /**
+     * save data
+     */
     public static void Save()
     {
         try {
-            //creating a new data file and storing data into it
+            //creating a new data file and storing data into it as an object output stream
+            //and values are written into the file
             ObjectOutputStream SaveFile = new ObjectOutputStream(new FileOutputStream("Data.txt"));    //referred from https://www.programiz.com/java-programming/objectoutputstream
             SaveFile.writeInt(noOfVaccines);                                                                 //referred from https://stackoverflow.com/questions/27787067/storing-integers-and-arrays-in-a-file-and-reading-them
             SaveFile.writeObject(names);
@@ -260,13 +291,18 @@ public class Task1 {
             e.printStackTrace();
         }
     }
+
+    /**
+     * load data
+     */
     public static void Load()
     {
         System.out.println("|------------------------------------------------------------------|");
         try {
             System.out.println("|                      Loading saved data....                      |");
-            //loading data from the saved file
+            //loading data from the saved file as a new object output stream
             ObjectInputStream LoadFile = new ObjectInputStream(new FileInputStream("Data.txt"));
+            //data is then passed into the preferred variables
             noOfVaccines = LoadFile.readInt();
             names = (String[]) LoadFile.readObject();
             LoadFile.close();
@@ -281,6 +317,10 @@ public class Task1 {
 
     //**********************************************Validation******************************************************
 
+    /**
+     * Validate until a integer is input
+     * @param test
+     */
     public static void intValidator(String test)
     {
         //used to find if user enters numbers rather than Strings or numbers out of range
@@ -295,6 +335,10 @@ public class Task1 {
             boothNum = sc.nextInt();
         } while (boothNum > 6);
     }
+
+    /**
+     * Asks to go back
+     */
     public static void MenuManager()
     {
         //get input if wants to go back till the user wants to read the outputs
@@ -316,15 +360,23 @@ public class Task1 {
         }
         System.out.println("|------------------------------------------------------------------|");
     }
+
+    /**
+     * initialize booth class
+     */
     private static void initialise()
     {
         //initializing the array by putting a default value of . to the array
         for (int x = 0; x < 6; x++)
             names[x] = ".";
     }
+
+    /**
+     * check no of empty booths
+     */
     public static void EmptyBoothChecker()
     {
-        //getting no of empty boots in the array wich can be used for validation
+        //getting no of empty boots in the array which can be used for validation
         EmptyBooth = 0;
 
         for(int i = 0; i < names.length; i++)
@@ -338,10 +390,14 @@ public class Task1 {
 
     //**********************************************Menu******************************************************
 
+    /**
+     * validate menu input
+     * @param userChoice
+     */
     public static void menuChoiceValidator(String userChoice)
     {
         //using a switch case statement with a string to validate input of user for the menu
-        //the emptyboothchecker will get the value of EmptyBooths can call the function according to the value
+        //the emptyBoothChecker will get the value of EmptyBooths can call the function according to the value
         EmptyBoothChecker();
         switch (userChoice)
         {
@@ -416,6 +472,10 @@ public class Task1 {
                 menuChoiceValidator(validInput);
         }
     }
+
+    /**
+     * prints menu
+     */
     public static void Menu()
     {
         //printing the menu

@@ -1,17 +1,27 @@
+import java.io.*;
 import java.util.Scanner;
 
 public class VaccinationCenter {
     private static Scanner sc = new Scanner(System.in);
-    private static Booth[] booth = new Booth[6];
+    public static Booth[] booth = new Booth[6];
     static int emptyBooth = 0;
     private static int classBoothNum;
     private static int noOfVaccines = 150;
 
+    /**
+     * initialize booth and prints menu
+     * @param args
+     */
     public static void main(String[] args)
     {
+        //first initializing the booth and printing the menu
         ClassInitialise();
         ClassMenu();
     }
+
+    /**
+     * initialize booth class
+     */
     private static void ClassInitialise()
     {
         //initializing the array by putting a default value of . to the array
@@ -21,6 +31,9 @@ public class VaccinationCenter {
 
 //    --------------------------------------------Menu------------------------------------------------------
 
+    /**
+     * prints menu
+     */
     public static void ClassMenu()
     {
         //printing the menu
@@ -52,8 +65,13 @@ public class VaccinationCenter {
         classMenuChoiceValidator(choice);
     }
 
+    /**
+     * validate menu input
+     * @param userChoice
+     */
     public static void classMenuChoiceValidator(String userChoice)
     {
+        //checking no of booths empty and shows messages directly without going into the function
         ClassEmptyBoothChecker();
         switch (userChoice)
         {
@@ -117,11 +135,12 @@ public class VaccinationCenter {
             ClassAddVaccines();
             break;
             case "999": case "EXT":
-            System.out.println("Thank you for using the system");
+                System.out.println("|                  Thank you for using the system                  |");
             break;
             default:
-                System.out.println("Input not valid");
-                System.out.println("Enter a valid input: ");
+                System.out.println("|                         input not valid                          |");
+                System.out.println("|                       Enter a valid input:                       |");
+                //if an invalid input is given asking user for a valid input and recurse the function again till a valid input is given
                 String validInput = sc.next();
                 classMenuChoiceValidator(validInput);
         }
@@ -129,7 +148,11 @@ public class VaccinationCenter {
 
     //    --------------------------------------------Menu Functions------------------------------------------------------
 
+    /**
+     * prints booth values
+     */
     private static void ClassViewBooth() {
+        //gets the length of the booth and prints the empty booths and names of patients
         for(int i = 0; i < booth.length; i++)
         {
             if (booth[i].getPatientName().equals("."))
@@ -145,6 +168,10 @@ public class VaccinationCenter {
         System.out.println("|------------------------------------------------------------------|");
         ClassMenuManager();
     }
+
+    /**
+     * prints empty booths
+     */
     private static void ClassViewEmptyBooth()
     {
         //if booth array contain . printing out an empty booth is present
@@ -159,6 +186,10 @@ public class VaccinationCenter {
         System.out.println("|------------------------------------------------------------------|");
         ClassMenuManager();
     }
+
+    /**
+     * adding patient to booth
+     */
     private static void ClassAddPatient()
     {
         //first will check if there is vaccines, if not no more patients cant be added
@@ -205,6 +236,7 @@ public class VaccinationCenter {
                         {
                             System.out.println("|                     All booths are occupied                      |");
                             ClassMenu();
+                            //ending the while loop and returning to menu
                             valid = true;
                         }
                     }
@@ -212,6 +244,7 @@ public class VaccinationCenter {
                     {
                         System.out.println("|                   "+classBoothNum + " is occupied by a patient                    |");
                         ClassAddPatient();
+                        //ending the while loop and returning to menu if not the loop will run throughout the program and give errors
                         valid = true;
                     }
                 }
@@ -221,6 +254,10 @@ public class VaccinationCenter {
             }
         }
     }
+
+    /**
+     * remove patient from booth number
+     */
     private static void ClassRemovePatient()
     {
         System.out.println("|------------------------------------------------------------------|");
@@ -239,6 +276,7 @@ public class VaccinationCenter {
             else if(classBoothNum==0||classBoothNum==1||classBoothNum==2||classBoothNum==3||classBoothNum==4||classBoothNum==5)
             {
                 //checking if a patient is present and if not will only remove the patient
+                //respective booth number is passen here
                 if(booth[classBoothNum].getPatientName().equals("."))
                 {
                     System.out.println("|                "+classBoothNum + " doesnt have a patient to remove                 |");
@@ -253,6 +291,7 @@ public class VaccinationCenter {
                     {
                         System.out.println("|                       All booths are Empty                       |");
                         ClassMenu();
+                        //ending the while loop
                         valid1 = true;
                     }
                 }
@@ -262,16 +301,20 @@ public class VaccinationCenter {
             }
         }
     }
+
+    /**
+     * sort patients according to alphabetical order
+     */
     private static void ClassPatientsSorted()
     {
         System.out.println("|------------------------------------------------------------------|");                     //https://www.geeksforgeeks.org/java-program-to-sort-names-in-an-alphabetical-order/
         String temp;
         for(int i = 0; i < booth.length; i++ ) {
-            for (int j = i + 1; j < booth.length; j++) {
-                if (booth[i].getPatientName().compareTo(booth[j].getPatientName()) > 0) {
-                    temp = booth[i].getPatientName();
-                    booth[i].setPatientName(booth[j].getPatientName());
-                    booth[j].setPatientName(temp);
+            for (int j = i + 1; j < booth.length; j++) {                                                                //for every i index a loop of j values from 1 to 6 is run
+                if (booth[i].getPatientName().compareTo(booth[j].getPatientName()) > 0) {                               //the two values are compared by ASCII value each time therefore only if index i value is larger the functions will be called
+                    temp = booth[i].getPatientName();                                                                   //the value related to index i is stored in a temporary string
+                    booth[i].setPatientName(booth[j].getPatientName());                                                 //the value related to index i is replaced with index j patient name
+                    booth[j].setPatientName(temp);                                                                      //and j index value is replaced with temporary value
                 }
             }
         }
@@ -285,10 +328,56 @@ public class VaccinationCenter {
         System.out.println("|------------------------------------------------------------------|");
         ClassMenuManager();
     }
-    private static void ClassSave() {
+
+    /**
+     * save data
+     */
+    private static void ClassSave()
+    {
+        try {
+            //creating a new data file and storing data into it as an object output stream
+            //and values are written into the file
+            ObjectOutputStream SaveFile = new ObjectOutputStream(new FileOutputStream("D1ata.txt"));    //referred from https://www.programiz.com/java-programming/objectoutputstream
+            SaveFile.writeInt(noOfVaccines);                                                                 //referred from https://stackoverflow.com/questions/27787067/storing-integers-and-arrays-in-a-file-and-reading-them
+
+            SaveFile.writeObject(booth);
+            //closing the save file after data is saved
+            SaveFile.close();
+            System.out.println("|------------------------------------------------------------------|");
+            System.out.println("|                          Data Saved                              |");
+            System.out.println("|------------------------------------------------------------------|");
+            ClassMenu();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    private static void ClassLoad() {
+
+    /**
+     * load data
+     */
+    private static void ClassLoad()
+    {
+        System.out.println("|------------------------------------------------------------------|");
+        try {
+            System.out.println("|                      Loading saved data....                      |");
+            //loading data from the saved file as a new object output stream
+            ObjectInputStream LoadFile = new ObjectInputStream(new FileInputStream("D1ata.txt"));
+            //data is then passed into the preferred variables
+            noOfVaccines = LoadFile.readInt();
+            booth = (Booth[]) LoadFile.readObject();
+            LoadFile.close();
+            ClassMenu();
+        } catch (IOException | ClassNotFoundException e) {
+            //if any saved files cannot be found giving a error massage
+            System.out.println("|       You don't have any files to Load. Please Save a file       |");
+            ClassMenu();
+        }
+        System.out.println("|------------------------------------------------------------------|");
     }
+
+    /**
+     * show remaining vaccine amount
+     */
     private static void ClassRemainingVaccines()
     {
         //giving the no of vaccines present in different occasions
@@ -313,6 +402,10 @@ public class VaccinationCenter {
             ClassMenuManager();
         }
     }
+
+    /**
+     * add vaccine
+     */
     private static void ClassAddVaccines()
     {
         System.out.println("|------------------------------------------------------------------|");
@@ -342,27 +435,22 @@ public class VaccinationCenter {
                 {
                     System.out.println("|                      Can't add more than "+needToAdd +"                      |");
                 }
+                //while loop will stop after the addNo is greater than needToAdd number
             } while (addNo > needToAdd);
 
-
-            if(addNo > needToAdd)
-            {
-                System.out.println("|                      Can't add more than "+needToAdd +"                      |");
-                System.out.println("|------------------------------------------------------------------|");
-            }
-            else
-            {
-                noOfVaccines += addNo;
-                System.out.println("|                      Added "+ addNo+ " to the stock                       |");
-                System.out.println("|                     Total no of vaccines "+ noOfVaccines+"                     |");
-                ClassMenu();
-            }
+            noOfVaccines += addNo;
+            System.out.println("|                      Added "+ addNo+ " to the stock                       |");
+            System.out.println("|                     Total no of vaccines "+ noOfVaccines+"                     |");
+            ClassMenu();
         }
         System.out.println("|------------------------------------------------------------------|");
     }
 
     //    --------------------------------------------validation------------------------------------------------------
 
+    /**
+     * check no of empty booths
+     */
     private static void ClassEmptyBoothChecker()
     {
         //getting no of empty boots in the array which can be used for validation
@@ -376,6 +464,10 @@ public class VaccinationCenter {
             }
         }
     }
+
+    /**
+     * Asks to go back
+     */
     public static void ClassMenuManager()
     {
         //get input if wants to go back till the user wants to read the outputs
@@ -397,18 +489,20 @@ public class VaccinationCenter {
         }
         System.out.println("|------------------------------------------------------------------|");
     }
+
+    /**
+     * Validate until a integer is input
+     * @param test
+     */
     public static void ClassIntValidator(String test)
     {
-        //used to find if user enters numbers rather than Strings or numbers out of range
-        do{
-            System.out.print(test);
-            while (!sc.hasNextInt()) {
-                //this will check for integers
-                System.out.println("|                     Please enter a number                        |");
-                System.out.print("|                            : ");
-                sc.next();
-            }
-            classBoothNum = sc.nextInt();
-        } while (classBoothNum > 6);
+        System.out.print(test);
+        while (!sc.hasNextInt()) {
+            //this will check for integers and update the classBoothNum
+            System.out.println("|                     Please enter a number                        |");
+            System.out.print("|                            : ");
+            sc.next();
+        }
+        classBoothNum = sc.nextInt();
     }
 }

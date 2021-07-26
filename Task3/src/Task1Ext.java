@@ -1,12 +1,13 @@
 import java.io.*;
 import java.util.Scanner;
 
-public class Task1 {
+public class Task1Ext {
 
     private static Scanner sc = new Scanner(System.in);
-    public static String[] names = new String[6];
+    public static String[] firstNames = new String[6];
+    public static String[] surNames = new String[6];
     private static int noOfVaccines = 150;
-    private static int boothNum;
+    private static int VaccinationNo;
     static int EmptyBooth = 0;
 
     public static void main(String[] args)
@@ -18,15 +19,15 @@ public class Task1 {
     {
         //printing out the string value in names array and if . present telling booth is empty
         System.out.println("|------------------------------------------------------------------|");
-        for(int i = 0; i < names.length; i++)
+        for(int i = 0; i < firstNames.length; i++)
         {
-            if (names[i].equals("."))
+            if (firstNames[i].equals("."))
             {
                 System.out.println("|                         booth " + i + " is empty                         |");
             }
             else
             {
-                System.out.println("|            booth is occupied by " + names[i]);
+                System.out.println("|            booth is occupied by " + firstNames[i] + surNames[i]);
             }
         }
         System.out.println("|------------------------------------------------------------------|");
@@ -36,9 +37,9 @@ public class Task1 {
     {
         //if names array contain . printing out an empty booth is present
         System.out.println("|------------------------------------------------------------------|");
-        for(int i = 0; i < names.length; i++)
+        for(int i = 0; i < firstNames.length; i++)
         {
-            if (names[i].equals("."))
+            if (firstNames[i].equals("."))
             {
                 System.out.println("|                         booth " + i + " is empty                         |");
             }
@@ -46,8 +47,7 @@ public class Task1 {
         System.out.println("|------------------------------------------------------------------|");
         MenuManager();
     }
-
-    public static void AddPatient()
+    public static void AddPatient(boolean valid)
     {
         //first will check if there is vaccines, if not no more patients cant be added
         if(noOfVaccines == 0)
@@ -57,51 +57,40 @@ public class Task1 {
             System.out.println("|------------------------------------------------------------------|");
             Menu();
         }
+
         else{
             //if there is vaccines the following functions will happen
             //the while loop will keep running a till a valid input is given by user
-            boolean valid = false;
             while (!valid)
             {
-                //value of boothNum will be passed by calling the function intValidator and does the function according to the value
-                intValidator("|              Enter booth number (0-5) or 6 to stop:              |\n|                            : ");
+                //value of VaccinationNo will be passed by calling the function intValidator and does the function according to the value
+                intValidator("|                           1.AstraZeneca                          |\n" +
+                        "|                           2.Sinopharm                            |\n|                           3.Pfizer                               |\n" +
+                        "|enter the respective number of the vaccination you want or 6 to exit|\n|                            : ");
 
-                if (boothNum == 6)
+                if (VaccinationNo == 6)
                 {
+                    //exits the adding patient function
                     Menu();
                     valid = true;
                 }
-                else if(boothNum==0||boothNum==1||boothNum==2||boothNum==3||boothNum==4||boothNum==5)
+                //Adds patient to AstraZeneca booth
+                else if(VaccinationNo == 1)
                 {
-                    //here it will first check is there is a patient in the booth by checking . is present
-                    if(names[boothNum].equals("."))
-                    {
-                        System.out.println("|                Enter customer name for booth " + boothNum + " :                 |");
-                        System.out.print("|                            : ");
-                        //getting an string of customers name and making its first character to a uppercase character
-                        // which will be usefull is sorting names in alphabaticle order as ASCII values are compared
-                        String customerName = sc.next();
-                        customerName = customerName.substring(0,1).toUpperCase() + customerName.substring(1);
-                        //setting the customer name according to the number to names array
-                        names[boothNum] = customerName;
-                        //decreasing 1 from total no of vaccines present
-                        noOfVaccines -= 1;
-                        System.out.println("|          Customer "+customerName+" was added to Booth No. "+boothNum);
-                        //checking if booth is full if so telling the user ..if not continuing.
-                        EmptyBoothChecker();
-                        if (EmptyBooth == 0)
-                        {
-                            System.out.println("|                     All booths are occupied                      |");
-                            Menu();
-                            valid = true;
-                        }
-                    }
-                    else
-                    {
-                        System.out.println("|                   "+boothNum + " is occupied by a patient                    |");
-                        AddPatient();
-                        valid = true;
-                    }
+                    //gives the respective booth numbers which AstraZeneca patients will add to getNo function
+                    getNo(0,1);
+                }
+                //Adds patient to Sinopharm booth
+                else if(VaccinationNo == 2)
+                {
+                    //gives the respective booth numbers which Sinopharm patients will add to getNo function
+                    getNo(2,3);
+                }
+                //Adds patient to Pfizer booth
+                else if(VaccinationNo == 3)
+                {
+                    //gives the respective booth numbers which Pfizer patients will add to getNo function
+                    getNo(4,5);
                 }
                 else {
                     System.out.println("|                         input not valid                          |");
@@ -109,6 +98,57 @@ public class Task1 {
             }
         }
     }
+    public static void getNo(int first, int second)
+    {
+        //Here it'll check if the passed booth numbers are empty/ if not calling the AddingInfo function with respective value
+        //the same respective value is passed to AddingInfo function
+        if(firstNames[first].equals("."))
+        {
+            AddingInfo(first);
+        }
+        else if(firstNames[second].equals("."))
+        {
+            AddingInfo(second);
+        }
+        //if all booths are occupied, returning true
+        else {
+            System.out.println("|         Booths for AstraZeneca is occupied by a patients         |");
+            AddPatient(true);
+        }
+    }
+    public static void AddingInfo(int boothNo)
+    {
+        //Getting information according to the respective value
+        System.out.println("|                     Enter Your First Name :                      |");
+        System.out.print("|                            : ");
+        //getting an string of customers name and making its first character to a uppercase character
+        // which will be use full is sorting names in alphabetical order as ASCII values are compared
+        String customerFirstName = sc.next();
+        customerFirstName = customerFirstName.substring(0,1).toUpperCase() + customerFirstName.substring(1);
+        //setting the customer name according to the number to names array
+        firstNames[boothNo] = customerFirstName;
+
+        System.out.println("|                     Enter Your Surname :                         |");
+        System.out.print("|                            : ");
+        //getting an string of customers name and making its first character to a uppercase character
+        // which will be use full is sorting names in alphabetical order as ASCII values are compared
+        String Surname = sc.next();
+        Surname = Surname.substring(0,1).toUpperCase() + Surname.substring(1);
+        //setting the customer name according to the number to names array
+        surNames[boothNo] = Surname;
+
+        //decreasing 1 from total no of vaccines present
+        noOfVaccines -= 1;
+        System.out.println("|          Customer "+customerFirstName+" "+ Surname+" was added to Booth No. "+boothNo);
+        EmptyBoothChecker();
+        if (EmptyBooth == 0)
+        {
+            System.out.println("|                     All booths are occupied                      |");
+            Menu();
+            AddPatient(true);
+        }
+    }
+
     public static void RemovePatient()
     {
         System.out.println("|------------------------------------------------------------------|");
@@ -119,23 +159,24 @@ public class Task1 {
             //value of boothNum will be passed by calling the function intValidator and does the function according to the value
             intValidator("|     Enter booth number (0-5) to remove patient or 6 to stop:     |\n|                            : ");
 
-            if (boothNum == 6)
+            if (VaccinationNo == 6)
             {
                 Menu();
                 valid1 = true;
             }
-            else if(boothNum==0||boothNum==1||boothNum==2||boothNum==3||boothNum==4||boothNum==5)
+            else if(VaccinationNo==0||VaccinationNo==1||VaccinationNo==2||VaccinationNo==3||VaccinationNo==4||VaccinationNo==5)
             {
                 //checking if a patient is present and if not will only remove the patient
-                if(names[boothNum].equals("."))
+                if(firstNames[VaccinationNo].equals("."))
                 {
-                    System.out.println("|                "+boothNum + " doesnt have a patient to remove                 |");
+                    System.out.println("|                "+VaccinationNo + " doesnt have a patient to remove                 |");
                 }
                 else
                 {
                     //replacing the customers name with the default . symbol which shows an empty booth
-                    System.out.println("|        Customer "+names[boothNum]+" was deleted from Booth No. "+boothNum);
-                    names[boothNum] = ".";
+                    System.out.println("|        Customer "+ firstNames[VaccinationNo]+" "+ firstNames[VaccinationNo]+" was deleted from Booth No. "+VaccinationNo);
+                    firstNames[VaccinationNo] = ".";
+                    surNames[VaccinationNo] = ".";
                     EmptyBoothChecker();
                     if (EmptyBooth == 6)
                     {
@@ -153,21 +194,26 @@ public class Task1 {
     public static void PatientsSorted()
     {
         System.out.println("|------------------------------------------------------------------|");                     //https://www.geeksforgeeks.org/java-program-to-sort-names-in-an-alphabetical-order/
-        String temp;
-        for(int i = 0; i < names.length; i++ ) {
-            for (int j = i + 1; j < names.length; j++) {
-                if (names[i].compareTo(names[j]) > 0) {
-                    temp = names[i];
-                    names[i] = names[j];
-                    names[j] = temp;
+        String first;
+        for(int i = 0; i < firstNames.length; i++ ) {
+            for (int j = i + 1; j < firstNames.length; j++) {
+                if (firstNames[i].compareTo(firstNames[j]) > 0) {
+                    first = firstNames[i];
+                    firstNames[i] = firstNames[j];
+                    firstNames[j] = first;
+                }
+                if (surNames[i].compareTo(surNames[j]) > 0) {
+                    first = surNames[i];
+                    surNames[i] = surNames[j];
+                    surNames[j] = first;
                 }
             }
         }
         System.out.println("|              The names in alphabetical order are:                |");
-        for (int i = 0; i < names.length; i++) {
-            if(names[i] != ".")
+        for (int i = 0; i < firstNames.length; i++) {
+            if(firstNames[i] != ".")
             {
-                System.out.println(names[i]);
+                System.out.println(firstNames[i] + surNames[i]);
             }
         }
         System.out.println("|------------------------------------------------------------------|");
@@ -250,7 +296,8 @@ public class Task1 {
             //creating a new data file and storing data into it
             ObjectOutputStream SaveFile = new ObjectOutputStream(new FileOutputStream("Data.txt"));    //referred from https://www.programiz.com/java-programming/objectoutputstream
             SaveFile.writeInt(noOfVaccines);                                                                 //referred from https://stackoverflow.com/questions/27787067/storing-integers-and-arrays-in-a-file-and-reading-them
-            SaveFile.writeObject(names);
+            SaveFile.writeObject(firstNames);
+            SaveFile.writeObject(surNames);
             SaveFile.close();
             System.out.println("|------------------------------------------------------------------|");
             System.out.println("|                          Data Saved                              |");
@@ -268,7 +315,8 @@ public class Task1 {
             //loading data from the saved file
             ObjectInputStream LoadFile = new ObjectInputStream(new FileInputStream("Data.txt"));
             noOfVaccines = LoadFile.readInt();
-            names = (String[]) LoadFile.readObject();
+            firstNames = (String[]) LoadFile.readObject();
+            surNames = (String[]) LoadFile.readObject();
             LoadFile.close();
             Menu();
         } catch (IOException | ClassNotFoundException e) {
@@ -279,21 +327,19 @@ public class Task1 {
         System.out.println("|------------------------------------------------------------------|");
     }
 
-    //**********************************************Validation******************************************************
+    //********************************************** Validation ******************************************************
 
     public static void intValidator(String test)
     {
         //used to find if user enters numbers rather than Strings or numbers out of range
-        do {
-            System.out.print(test);
-            while (!sc.hasNextInt()) {
-                //this will check for integers
-                System.out.println("|                     Please enter a number                        |");
-                System.out.print("|                            : ");
-                sc.next();
-            }
-            boothNum = sc.nextInt();
-        } while (boothNum > 6);
+        System.out.print(test);
+        while (!sc.hasNextInt()) {
+            //this will check for integers
+            System.out.println("|                     Please enter a number                        |");
+            System.out.print("|                            : ");
+            sc.next();
+        }
+        VaccinationNo = sc.nextInt();
     }
     public static void MenuManager()
     {
@@ -320,28 +366,32 @@ public class Task1 {
     {
         //initializing the array by putting a default value of . to the array
         for (int x = 0; x < 6; x++)
-            names[x] = ".";
+        {
+            firstNames[x] = ".";
+            surNames[x]=".";
+        }
+
     }
     public static void EmptyBoothChecker()
     {
         //getting no of empty boots in the array wich can be used for validation
         EmptyBooth = 0;
 
-        for(int i = 0; i < names.length; i++)
+        for(int i = 0; i < firstNames.length; i++)
         {
-            if (names[i].equals("."))
+            if (firstNames[i].equals("."))
             {
                 EmptyBooth += 1;
             }
         }
     }
 
-    //**********************************************Menu******************************************************
+    //********************************************** Menu ******************************************************
 
     public static void menuChoiceValidator(String userChoice)
     {
         //using a switch case statement with a string to validate input of user for the menu
-        //the emptyboothchecker will get the value of EmptyBooths can call the function according to the value
+        //the EmptyBoothChecker will get the value of EmptyBooths can call the function according to the value
         EmptyBoothChecker();
         switch (userChoice)
         {
@@ -363,7 +413,7 @@ public class Task1 {
             case "102": case "APB":
                 if (EmptyBooth > 0)
                 {
-                    AddPatient();
+                    AddPatient(false);
                 }
                 else
                 {

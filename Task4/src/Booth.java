@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.LinkedList;
 
 public class Booth extends Patient implements Serializable {
     private String vaccineType;
@@ -19,7 +20,7 @@ public class Booth extends Patient implements Serializable {
     }
 
     /**
-     * prints info stored in booth
+     *print all info stored
      */
     public void printInfo()
     {
@@ -27,10 +28,6 @@ public class Booth extends Patient implements Serializable {
         System.out.println("Vaccine Type : " + vaccineType);
     }
 
-    /**
-     * returns vaccine type
-     * @return
-     */
     //gets and sets values accordingly
     public String getVaccineType() {
         return vaccineType;
