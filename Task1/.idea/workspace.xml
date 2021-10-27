@@ -7,6 +7,9 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
       <filtered-out-file-type name="LOCAL_BRANCH" />
@@ -16,6 +19,7 @@
     </file-type-list>
   </component>
   <component name="ProjectId" id="1vDELniIWONKfAWadHyv3B2hv1y" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -25,6 +29,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../New folder" />
   </component>
   <component name="RunManager" selected="Application.Task1">
     <configuration name="ServiceCenterExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -66,6 +71,7 @@
       <workItem from="1627245471924" duration="244000" />
       <workItem from="1627246995979" duration="58000" />
       <workItem from="1627249470056" duration="137000" />
+      <workItem from="1627538991187" duration="28000" />
     </task>
     <servers />
   </component>

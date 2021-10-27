@@ -1,0 +1,27 @@
+#formBack{
+    -fx-background-image: url(../img/formback.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: #FDD3CF;
+}
+#GenRecipt{
+    -fx-background-color: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-text-fill: #FF6366;
+}
+.tab {
+    -fx-background-color: #fa8d8f;
+    -fx-color: white;
+}
+.tab-pane .tab-header-background{
+    -fx-background-color: white;
+}
+#menu{
+    -fx-border-color: black;
+}
+#menu1{
+    -fx-border-color: #ff0000;
+}
+#menu2{
+    -fx-border-color: #8400ff;
+}
